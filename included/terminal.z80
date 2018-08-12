@@ -1,0 +1,88 @@
+INCLUDE "included/hardware.inc"
+
+SECTION "putc",ROM0
+putChar::		/*	puts d into [screenPosition] and scroll
+					thrashes bc, af
+					only use skipInit when apropriate (=never)
+					**needs a rework! works with d, now it's stupid!
+					\n is implemented, should implement other control chars
+				*/
+	ld 	hl, screenPosition
+	ld 	a, [hl+]
+	ld 	b, [hl]
+	ld 	c, a
+.skipInit::
+	and	a, %00011111
+	cp	a, SCRN_X_B
+	call nc, .newLine	;	if x>20, go down
+	ld	a, d
+	cp	a, "\n"
+	jr nz, .printD
+	jr .newLine
+.printD
+	ld	[bc], a	;	print d
+	inc	bc
+	jr .saveBC
+
+.newLine
+	push hl
+	ld	hl,	rSCY
+	ld	a, [hl];	scroll phisically
+	add	a, 8;		by 8 pixels (1 tile)
+	ld	[hl], a
+
+	ld	a, c		;x=0
+	and	a, %11100000
+	add	a, SCRN_VX_B;y++
+	ld	c,	a
+
+	jr	nc,	.dontOverflowScreen
+	inc	b
+
+.dontIncreaseB
+	ld a, HIGH(_SCRN1)
+	cp a, b			;if b is 9C...
+	jr nz, .dontOverflowScreen
+	ld b, HIGH(_SCRN0)	; b = 98
+.dontOverflowScreen
+	pop hl
+.saveBC
+	ld [hl], b
+	dec l
+	ld [hl], c
+	inc l
+;	pop hl /****/
+	ret
+SECTION "terminal vars",HRAM
+screenPosition::
+	ds 2
+
+
+
+;INCLUDE "included/my_funcs.z80"
+SECTION "initialization",ROM0
+initTerminal::
+.waitVBlank
+	ld a, [rLY]		;	the line currently being drawn.
+	cp a, SCRN_Y	;	if it's higher than screen Y,
+	jr c, .waitVBlank;	it's currently in vblank
+
+	ld a, LCDCF_BG8000;	use 8000 method to refer to bg tiles
+	ld [rLCDC], a	;	turn screen and everything else off
+.setPalette
+	ld a, %11100100
+	ld [rBGP], a	;	set pallete
+.resetScroll
+	xor a
+	ld [rSCX], a	;	scroll x,y
+	ld [rSCY], a
+.setScreenPos
+	ld a,LOW (0+17*SCRN_VX_B+_SCRN0)	;2,2
+	ldh [screenPosition],a				;2,3
+	ld a,HIGH (0+17*SCRN_VX_B+_SCRN0)	;2,2
+	ldh [screenPosition+1],a			;2,3
+.loadFont
+	ld hl, _VRAM
+	ld bc, font_start
+	ld d, $FF		;	number of tiles
+	jp loadTiles	;	load and uncompress 1bpp tiles

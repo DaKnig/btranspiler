@@ -1,0 +1,25 @@
+SECTION "fill memory",ROM0
+memFill::		;	hl-start, de-size, b-filler
+	ld [hl], b	;2
+	inc hl		;2
+	dec de
+	ld a, d
+	or a, e
+	jr nz, memFill
+	ret
+
+SECTION "load tileset",ROM0
+loadTiles::		;	hl-vram start, d-ammount of tiles, bc-tile data start
+.copyFontLoop
+
+	ld e, $08		;
+.copyTile
+	ld a, [bc]	;2
+	ld [hl+], a	;2
+	ld [hl+], a	;2 copy twice, 1bpp->2bpp
+	inc bc		;2
+	dec e		;1
+	jr nz, .copyTile;3,2	this inner loop takes about 192
+	dec d		;1
+	jr nz, .copyFontLoop;3,2
+	ret
