@@ -16,26 +16,27 @@ memory map: http://gameboy.mongenel.com/dmg/asmmemmap.html
 	implementation specs-
 	do nothing on EOF input
 	the data line "wraps around"
-	depracated //the data line" is 4096 bytes long, see MEMSIZE, easily changable
+	the data line" is 4096 bytes long
 	can go up to 512 loops "deep", see STACKSIZE, easily changable
 	dataptr=hl: use hl as data pointer
 
 	assumes the input is legit- no problems with [] etc
-	data line is at the internal RAM - range C000-CFFF
+	data line is in WRAM - range C000-CFFF
+	(I will probably add the ability to use the banked wram on CGB
+		or banked SRAM on compatible carts. dont hold your breath, tho...)
 	memory map:	http://gameboy.mongenel.com/dmg/asmmemmap.html
 
-	PROGresS- still need to mess with addr
+	PROGRESS- still need to mess with addr
 	DONE- +-><
 	[] loops are done
-	.	input in progress
+	. printing is implemented by using my "terminal" (proper name soon^TM)
+	, input in progress
 
 	ideas:
-	1)make better code by bunching up to 256 +- together into one inc
-	same for <>
-	DIT- done, allowing bunching up as many as I wish..
-	uses char's overflow
+	1a)make better code by bunching up to 256 +- together into one inc - DONE
+	1b)same for <> - more complicated for some reason
 	2)use stdin, stdout as in/out files
-	3)
+	3)more complicated shit, like static analysis, unrolling simple loops...
 */
 #include <stdio.h>
 #include <stdint.h>
@@ -54,16 +55,7 @@ uint16_t addr;	//addr: how many machine code bytes since beginnning of the progr
 
 
 void inc_data_ptr(){
-	//++dataptr;
-	//dataptr=(dataptr-data)%MEMSIZE+data;//wrap around
-/*	int counter=0;
-	int temp=fgetc(in);
-	while(temp=='>' || temp=='<'){
-		counter+=(temp=='>' ? 1 : -1);
-		temp=fgetc(in);
-	}
-	ungetc(temp,in);
-	counter%=0x1000;
+/*
 	if (counter<256 && counter>0){
 		fprintf(out,"\tld a,$%02X\n", (char) counter);//CRAP,FIX
 		fprintf(out,"\tadd a,l\n");
@@ -71,7 +63,7 @@ void inc_data_ptr(){
 		fprintf(out,"\tld a,0\n");
 		fprintf(out,"\tadc a,h\n");
 		fprintf(out,"\tld  h,a\n");
-	}
+	}//probably over-complicating things I shouldnt
 */
 	int counter=0;
 	int temp=fgetc(in);
