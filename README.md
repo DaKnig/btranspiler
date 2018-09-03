@@ -19,13 +19,16 @@ assumes the input is ok- if you're not sure, put it through bprecompiler
 	
 data line is in WRAM - range C000-CFFF
 (I will probably add the ability to use the banked wram on CGB or banked SRAM on compatible carts. dont hold your breath, though...)
-## progress- still need to mess with addr, mostly working
+## progress- 
+currently, it only copies the data to vram, doesn't actually display anything as the LCD is turned off
 
-complete:   +-><.[]
+still need to mess with addr, mostly working...
+
+implemented all the instructions excluding input
 
 . printing is implemented by using my "terminal" (PLEASE suggest a better, more fitting name)
 
-, input in progress - will be implemented when it would be added to "terminal"
+, input is in progress - will be implemented when it would be added to "terminal"
 
 ## optimizations:
 translates multiple consecutive adds/moves ('+','-','>','<') into a single add/move instruction
