@@ -1,3 +1,4 @@
+//best viewed with 4-wide tabs
 #include <stdio.h>
 #include <stdint.h>
 //#define MEMSIZE 4096
