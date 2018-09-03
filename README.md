@@ -31,4 +31,4 @@ implemented all the instructions excluding input
 `,` input is in progress - will be implemented when it would be added to "terminal"
 
 ## optimizations:
-translates multiple consecutive adds/moves (`+` `-` `>` `<`) into a single add/move instruction
+translates multiple consecutive adds/moves (`+`,`-`/`>`,`<`) into a single add/move instruction
