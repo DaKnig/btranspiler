@@ -26,9 +26,9 @@ still need to mess with addr, mostly working...
 
 implemented all the instructions excluding input
 
-. printing is implemented by using my "terminal" (PLEASE suggest a better, more fitting name)
+`.` printing is implemented by using my "terminal" (PLEASE suggest a better, more fitting name)
 
-, input is in progress - will be implemented when it would be added to "terminal"
+`,` input is in progress - will be implemented when it would be added to "terminal"
 
 ## optimizations:
 translates multiple consecutive adds/moves ('+','-','>','<') into a single add/move instruction
