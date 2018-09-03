@@ -1,7 +1,7 @@
 # btranspiler
 
 a translator (or transpiler) from brainfuck to gbz80 asm
-## GOALS:
+## GOALS
 
 - easily translatable- maybe translate it to gbz80 asm at some point?
 
@@ -9,7 +9,7 @@ a translator (or transpiler) from brainfuck to gbz80 asm
 
 - assembler included? (to become a compiler) -edit - will probably be implemented as a seperate project
 
-## implementation specs- the standard specs of the brainduck project:
+## implementation specs- the standard specs of the brainduck project
 the data line "wraps around"
 
 the data line is 4096 bytes long
@@ -19,7 +19,7 @@ assumes the input is ok- if you're not sure, put it through bprecompiler
 	
 data line is in WRAM - range C000-CFFF
 (I will probably add the ability to use the banked wram on CGB or banked SRAM on compatible carts. dont hold your breath, though...)
-## progress- 
+## progress
 currently, it only copies the data to vram, doesn't actually display anything as the LCD is turned off
 
 still need to mess with addr, mostly working...
@@ -30,5 +30,5 @@ implemented all the instructions excluding input
 
 `,` input is in progress - will be implemented when it would be added to "terminal"
 
-## optimizations:
+## optimizations
 translates multiple consecutive adds/moves (`+`,`-`/`>`,`<`) into a single add/move instruction
