@@ -10,6 +10,9 @@ a translator (or transpiler) from brainfuck to gbz80 asm
 - assembler included? (to become a compiler) -edit - will probably be implemented as a seperate project
 
 ## implementation specs- the standard specs of the brainduck project
+
+uses Game Boy Assembly Language Primer (see [Awesome-GBDev/boilerplates](https://github.com/gbdev/awesome-gbdev#boilerplates) )
+
 the data line "wraps around"
 
 the data line is 4096 bytes long
